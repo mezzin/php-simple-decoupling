@@ -1,0 +1,15 @@
+{
+	"name": "mezzin/php-simple-decoupling",
+	"type": "library",
+	"description": "Simple Decoupling library for use with Queue service like SQS",
+	"homepage": "https://github.com/mezzin/php-simple-decoupling",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.3.0",
+		"ext-curl": "*"
+	},
+	"target-dir": "mezzin/php-simple-decoupling",
+	"autoload": {
+		"classmap": ["lib/"]
+	}
+}
