@@ -6,7 +6,7 @@ require_once dirname(__FILE__) . '/SimpleDecoupling.php';
 class SimpleDecouplingShipper extends SimpleDecoupling {
     private $_shipper;
     
-    function __construct($shipper){
+    function __construct($processor){
         $this->_shipper = $shipper;
     }
     

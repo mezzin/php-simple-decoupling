@@ -6,28 +6,49 @@ namespace SimpleDecoupling;
 class SimpleDecoupling {
     private $_config;
     
-    function __construct($shipper){
+    function __construct(){
         
         
     }
-    public function send(){
-       
-    }
     
-    
-    public function createEnvelope($type,$endpoint,$param,$payload, $compression = "none"){
-        $envelope = new \stdClas();
-        $envelope->type = type;
+    private function _createDataEnvelope($type,$endpoint,$param,$data, $compression = "none"){
+        $envelope = new \stdClass();
+        $envelope->type = $type;
         $envelope->compression = $compression;
         $envelope->endpoint = $endpoint;
-        switch($compression){
+        switch($compression) {
+            case true:
             case "gzip":
-                $envelope->payload = base64_encode(gzencode($payload));
+                $envelope->data = base64_encode(gzencode($data));
                 break;
-            defaul:
-                $envelope->payload = $payload;
+            default:
+                $envelope->data = $payload;
+                break;
         }
-        return json_encode($envelope);
+        return $envelope;
     }
+    
+    private function _readDataEnvelope($rawenvelope){
+        $envelope json_decode($rawenvelope);
+        
+        $envelope->endpoint = $endpoint;
+        switch($envelope->compression) {
+            case "gzip":
+                $envelope->data = base64_encode(gzencode($envelope->data));
+                break;
+            default:
+                break;
+        }
+        return $envelope;
+    }
+    
+    public function send($type,$endpoint,$param,$data, $compression = "none"){
+        return $this->_createDataEnvelope($type,$endpoint,$param,$data, $compression);
+    }
+    
+    
+    
+    
+    
     
 }
