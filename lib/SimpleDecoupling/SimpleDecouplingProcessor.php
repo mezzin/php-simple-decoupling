@@ -3,20 +3,20 @@ namespace SimpleDecoupling;
 require_once dirname(__FILE__) . '/SimpleDecoupling.php';
 
 
-class SimpleDecouplingShipper extends SimpleDecoupling {
-    private $_shipper;
+class SimpleDecouplingProcessor extends SimpleDecoupling {
+    private $_processor;
     
     function __construct($processor){
-        $this->_shipper = $shipper;
+        $this->_processor = $processor;
     }
     
-    public function send($type,$endpoint,$param,$data, $compression ){
-        $dataEnvelope = parent::send($type,$endpoint,$param,$data, $compression);
-        $this->_shipper->ship($dataEnvelope);
-    }
-    
-    public function sendraw($message){
-        $this->_shipper->ship($message);
+    public function process(){
+        $data = $this->_processor->process();
+        if($data != null){
+            echo $data;
+            $envelope = $this->_readDataEnvelope($data);
+            $envelope->json_decode($envelope));
+        }
     }
     
 }

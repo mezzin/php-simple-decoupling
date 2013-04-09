@@ -10,8 +10,8 @@ class SimpleDecouplingShipper extends SimpleDecoupling {
         $this->_shipper = $shipper;
     }
     
-    public function send($type,$endpoint,$param,$data, $compression ){
-        $dataEnvelope = parent::send($type,$endpoint,$param,$data, $compression);
+    public function send($type,$method,$endpoint,$header,$param,$data, $compression = "none"){
+        $dataEnvelope = parent::send($type,$method,$endpoint,$header,$param,$data, $compression);
         $this->_shipper->ship($dataEnvelope);
     }
     

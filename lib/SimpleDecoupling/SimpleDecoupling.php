@@ -7,34 +7,61 @@ class SimpleDecoupling {
     private $_config;
     
     function __construct(){
-        
-        
     }
     
-    private function _createDataEnvelope($type,$endpoint,$param,$data, $compression = "none"){
+    protected function _senddata($url,$postData = null,$header = null,$method = "get"){
+        $method = strtolower($method);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if($method=="put") {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        } else if ($method =="post") {
+            curl_setopt($ch, CURLOPT_POST, 1);
+        } else if ($method == "delete"){
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        }
+        if($postData!=null) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        }
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $errors = array(curl_error($ch));
+            echo "Error $url:\n";
+            print_r($errors);
+        }
+        curl_close($ch);
+        return $output;
+    }
+    
+    protected function _createDataEnvelope($type,$method,$endpoint,$header,$param,$data, $compression = "none"){
         $envelope = new \stdClass();
         $envelope->type = $type;
-        $envelope->compression = $compression;
         $envelope->endpoint = $endpoint;
+        $envelope->method = $method;
+        if($header != null){
+            $envelope->header = $header;
+        }
         switch($compression) {
             case true:
-            case "gzip":
-                $envelope->data = base64_encode(gzencode($data));
+            case "gzcompress":
+                $envelope->compression = "gzcompress";
+                $envelope->data = base64_encode(gzcompress($data));
                 break;
             default:
-                $envelope->data = $payload;
+                $envelope->compression = "none";
+                $envelope->data = $data;
                 break;
         }
         return $envelope;
     }
     
-    private function _readDataEnvelope($rawenvelope){
-        $envelope json_decode($rawenvelope);
-        
-        $envelope->endpoint = $endpoint;
+    protected function _readDataEnvelope($dataEnvelope){
+        $envelope = json_decode($dataEnvelope);
         switch($envelope->compression) {
-            case "gzip":
-                $envelope->data = base64_encode(gzencode($envelope->data));
+            case "gzcompress":
+                $envelope->data = gzuncompress(base64_decode($envelope->data));
                 break;
             default:
                 break;
@@ -42,8 +69,8 @@ class SimpleDecoupling {
         return $envelope;
     }
     
-    public function send($type,$endpoint,$param,$data, $compression = "none"){
-        return $this->_createDataEnvelope($type,$endpoint,$param,$data, $compression);
+    public function send($type,$method,$endpoint,$header,$param,$data, $compression = "none"){
+        return $this->_createDataEnvelope($type,$method,$endpoint,$header,$param,$data, $compression);
     }
     
     
