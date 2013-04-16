@@ -13,9 +13,9 @@ class SimpleDecouplingProcessor extends SimpleDecoupling {
     public function process(){
         $data = $this->_processor->process();
         if($data != null){
-            echo $data;
             $envelope = $this->_readDataEnvelope($data);
-            $envelope->json_decode($envelope));
+            //$envelope = json_decode($envelope);
+            print_r($envelope);
         }
     }
     
