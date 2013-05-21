@@ -1,6 +1,7 @@
 <?php
 namespace SimpleDecoupling;
 require_once dirname(__FILE__) . '/SimpleDecoupling.php';
+require_once dirname(__FILE__) . '/Shipper/Shipper.php';
 
 
 class SimpleDecouplingShipper extends SimpleDecoupling {
@@ -10,13 +11,9 @@ class SimpleDecouplingShipper extends SimpleDecoupling {
         $this->_shipper = $shipper;
     }
     
-    public function send($type,$method,$endpoint,$header,$param,$data, $compression = "none"){
-        $dataEnvelope = parent::send($type,$method,$endpoint,$header,$param,$data, $compression);
+    public function send($type,$meta,$data, $compression = "none"){
+        $dataEnvelope = parent::send($type,$meta,$data, $compression);
         $this->_shipper->ship($dataEnvelope);
-    }
-    
-    public function sendraw($message){
-        $this->_shipper->ship($message);
     }
     
 }

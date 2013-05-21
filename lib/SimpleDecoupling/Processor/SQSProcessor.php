@@ -20,15 +20,31 @@ class SQSProcessor extends Processor {
     }
     
     private function _pop(){
-        $response = $this->_sqs->receive_message($this->_queueUrl);
-        if ((bool) $response->body->Message()) {
-            return (string) $response->body->Body(0);
+        $response = $this->_sqs->receive_message($this->_queueUrl,array(
+            'VisibilityTimeout' => 43200
+        ));
+        if (isset($response->body->ReceiveMessageResult->Message)) {
+            $message = new \stdClass;
+            $message->body = json_decode((string)$response->body->ReceiveMessageResult->Message->Body);
+            $message->receiptHandle = (string)$response->body->ReceiveMessageResult->Message->ReceiptHandle;
+            return $message;
         } else {
-            return NULL;
+            return null;
         }
     }
     
-    function process(){
-        return $this->_pop();
+    private function _delete($receiptHandle){
+        $this->_sqs->delete_message($this->_queueUrl, $receiptHandle);
+    }
+    
+    public function process(){
+        $message = $this->_pop();
+        if($message!=null){
+            echo "Message popped started processing...\n";
+            $this->_doProcess($message->body);
+            $this->_delete($message->receiptHandle);
+        } else {
+            echo "No message available...\n";
+        }
     }
 }

@@ -11,12 +11,11 @@ class SimpleDecouplingProcessor extends SimpleDecoupling {
     }
     
     public function process(){
-        $data = $this->_processor->process();
-        if($data != null){
-            $envelope = $this->_readDataEnvelope($data);
-            //$envelope = json_decode($envelope);
-            print_r($envelope);
-        }
+        $message = $this->_processor->process();
+        //if($message != null){
+        //    $envelope = $this->_readDataEnvelope($message->body);
+        //    print_r($envelope);
+        //}
     }
     
 }
