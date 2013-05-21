@@ -20,5 +20,9 @@ class SQSShipper extends Shipper {
     
     function ship($data){
         $response = $this->_sqs->send_message($this->_queueUrl, json_encode($data));
+        if($response->status !=200){
+            throw new ShipperException($response->body->Error->Message);
+        }
+        
     }
 }

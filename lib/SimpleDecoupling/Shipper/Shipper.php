@@ -1,6 +1,8 @@
 <?php
 namespace SimpleDecoupling\Shipper;
 
+require_once dirname(__FILE__) . '/ShipperException.php';
+
 class Shipper {
     //private $_config;
     
