@@ -39,12 +39,14 @@ class SQSProcessor extends Processor {
     
     public function process(){
         $message = $this->_pop();
+        
         if($message!=null){
-            echo "Message popped started processing...\n";
+            echo date("Y-m-d H:i:s") . " Message popped started processing...\n";
             $this->_doProcess($message->body);
             $this->_delete($message->receiptHandle);
         } else {
-            echo "No message available...\n";
+            echo date("Y-m-d H:i:s") . " No message available...\n";
         }
+        return $message;
     }
 }

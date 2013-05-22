@@ -12,10 +12,7 @@ class SimpleDecouplingProcessor extends SimpleDecoupling {
     
     public function process(){
         $message = $this->_processor->process();
-        //if($message != null){
-        //    $envelope = $this->_readDataEnvelope($message->body);
-        //    print_r($envelope);
-        //}
+
     }
     
 }
