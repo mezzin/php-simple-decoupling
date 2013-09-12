@@ -1,7 +1,9 @@
 <?php
+/* 
+ * @copyright Justin Kieft
+ * @license MIT License (see LICENSE.md) 
+ */
 namespace SimpleDecoupling;
-//require_once dirname(__FILE__) . '/SimpleDecouplingException.php';
-
 
 class SimpleDecoupling {
     private $_config;

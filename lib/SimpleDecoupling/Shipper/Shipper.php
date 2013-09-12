@@ -1,4 +1,8 @@
 <?php
+/* 
+ * @copyright Justin Kieft
+ * @license MIT License (see LICENSE.md) 
+ */
 namespace SimpleDecoupling\Shipper;
 
 require_once dirname(__FILE__) . '/ShipperException.php';
